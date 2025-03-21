@@ -1,0 +1,28 @@
+[project]
+name = "a1"
+version = "0.1.0"
+description = ""
+prompt = "{project_name} [3.13] "
+authors = [
+    {name = "Mansoor Ahmed Memon",email = "mansoormemon@bss.com.pk"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "opencv-python (>=4.11.0.86,<5.0.0.0)",
+    "numpy (>=2.2.3,<3.0.0)",
+    "pillow (>=11.1.0,<12.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "a1", from = "src"}]
+
+[tool.autopep8]
+max_line_length = 108
+
+[tool.black]
+line-length = 108
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

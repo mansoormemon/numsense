@@ -6,14 +6,15 @@ from .typefaces import DEFAULT_TYPEFACE
 
 
 class SegmentDisplayReader:
-    def __init__(self, conf_thresh=0.6, typeface=DEFAULT_TYPEFACE):
+    def __init__(self, conf_thresh=0.35, typeface=DEFAULT_TYPEFACE):
         self.conf_thresh = conf_thresh
 
         self.typeface = Typeface(typeface)
         self.typeface.compile()
 
     def __preprocess_image(self, img, blur_strength=5, closure_tolerance=7):
-        blurred = cv.GaussianBlur(img, (blur_strength, blur_strength), 0)
+        grayed = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        blurred = cv.GaussianBlur(grayed, (blur_strength, blur_strength), 0)
         _, thresh = cv.threshold(blurred, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
         kernel = np.ones((closure_tolerance, closure_tolerance), np.uint8)
         closed = cv.morphologyEx(thresh, cv.MORPH_CLOSE, kernel)
@@ -56,7 +57,7 @@ class SegmentDisplayReader:
         return [block for line in lines for block in line]
 
     def __call__(self, img_path):
-        img = cv.imread(img_path, cv.IMREAD_GRAYSCALE)
+        img = cv.imread(img_path)
         if img is None:
             raise FileNotFoundError(f"'{img_path}' not found")
 
@@ -72,5 +73,4 @@ class SegmentDisplayReader:
             else:
                 recognized_digits.append((x, y, "-"))
         recognized_digits = self.__sort_regions(recognized_digits)
-        recognized_number = "".join(str(digit) for _, _, digit in recognized_digits)
-        return recognized_number
+        return img, recognized_digits

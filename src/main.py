@@ -6,8 +6,8 @@ from numsense import SegmentDisplayReader
 samples_dir = "samples"
 
 if __name__ == "__main__":
-    reader = SegmentDisplayReader()
+    reader = SegmentDisplayReader(conf_thresh=0.35)
     samples = sorted(os.listdir(samples_dir))
     for s in samples:
-        text = reader(f"{samples_dir}/{s}")
-        print(text)
+        ret_val = reader(f"{samples_dir}/{s}")
+        print(ret_val)
